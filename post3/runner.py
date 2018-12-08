@@ -4,9 +4,8 @@ The main file that will evolve into our trading library
 from datetime import datetime, timedelta
 import v20
 
-
-OANDA_ACCESS_TOKEN = ""
-OANDA_ACCOUNT_ID = '' #put your access id here 
+OANDA_ACCESS_TOKEN = #put your API key here
+OANDA_ACCOUNT_ID =  #put your access id here
 
 def main():
     print("------ System online -------", datetime.now())
@@ -24,24 +23,33 @@ def main():
                     includeUnitsAvailable=False)
 
     print(response.reason + latest_price_time)
-    
+
     prices = response.get("prices", 200)
+
     if len(prices):
-        buy_price = prices[0].bids[0].price 
-
-        print("Buy at " + str(buy_price))
-
-        response = api.order.market(
-            OANDA_ACCOUNT_ID,
-            instrument='EUR_USD',
-            units=5000)
-
-        print("Trading id: " + str(response.get('orderFillTransaction').id))
-        print("Account Balance: " + str(response.get('orderFillTransaction').accountBalance))
-        print("Price: " + str(response.get('orderFillTransaction').price))
-        
+        buy_price = prices[0].bids[0].price
+        sell_price = prices[0].asks[0].price
+        print('buy %s, sell %s, spread %s' % (buy_price,sell_price,sell_price-buy_price))
     else:
-        print(response.reason)
+        print('no prices')
+    
+
+    # if len(prices):
+    #     buy_price = prices[0].bids[0].price
+    #
+    #     print("Buy at " + str(buy_price))
+    #
+    #     response = api.order.market(
+    #         OANDA_ACCOUNT_ID,
+    #         instrument='EUR_USD',
+    #         units=5000)
+    #
+    #     print("Trading id: " + str(response.get('orderFillTransaction').id))
+    #     print("Account Balance: " + str(response.get('orderFillTransaction').accountBalance))
+    #     print("Price: " + str(response.get('orderFillTransaction').price))
+    #
+    # else:
+    #     print(response.reason)
 
 if __name__ == "__main__":
     main()
